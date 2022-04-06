@@ -1,0 +1,50 @@
+<button class="help">?</button>
+    <span class="tooltiptext"><p><b>USAGE:</b> Write your query into the <b>searchbar</b>.</p>
+    <p>Press key [↑] to use autocomplete for filter names</p>
+    <p>to use filters type in query <b>filter Name:filter</b></p>
+    <p><b>Available filters:</b></p>
+    <ul>
+        <li><b>user</b> - search by username </li>
+        <li><b>location</b> - search by location </li>
+        <li><b>language</b>- search by programming language</li>
+        <li><b>search</b> - <b>users|repositories</b>(default)<b></b>- switches the searchmode</li>
+    <p>By clicking on a <b>filter tag</b>, you can <b>remove</b> the filter from the query</p>
+    </ul>
+    </span>
+    <div class="searchwrap">
+    <input #searchbar id="query" class="searchbar" placeholder="type here" (keyup.arrowup)="ui.autocomplete(searchbar)" (keyup.control.v)="getQuery(searchbar)" (keyup.space)="getQuery(searchbar)" (keyup.enter)="submit(searchbar)" (keyup)="ui.autocomplete_correct(searchbar, $event.key)">
+        <ul id="tags" class="tags">
+          <li class="tag" (click)="ui.removeTag($event)" *ngFor="let filter of searchParams.filters">{{filter}}</li>
+          <li class="tag" *ngIf="searchParams.search" style="float: right;">{{searchParams.search}}</li>
+        </ul>
+    <button id="submit" class="btn" (click)="submit(searchbar)"><span>search</span></button>
+   </div>
+   <div *ngIf="data" class=pagination id="pagination"><button id="pset1" (click)="pageEvent('setPage',1)"><<</button><button id="pdec" (click)="pageEvent('prevPage')"><</button><input #page type="number" value="{{ui.getCurPage()}}" min="0" (keyup.enter)="pageEvent('setPage',page.value)" ><button id="pinc" (click)="pageEvent('nextPage')">></button><button id="psetmax" (click)="pageEvent('setPage', ui.getMaxPage())">>></button></div>
+   <div style="margin-left:calc(50vw - 100px)" >
+   <img src="../assets/Eclipse-1s-200px.svg" height="200px" width="200px" *ngIf="loading">
+  </div>
+    <div *ngIf="data" id="result" class="row result">
+      <div class="row" *ngIf="searchParams.search =='users'">
+        <div *ngFor="let element of data" class="card col-md-2" >
+        <img src='{{element.avatar_url}}' alt='{{element.login}}'>
+        <a href='{{element.html_url}}'><p>{{element.login}}</p></a>
+        <p class='gitid'>${{element.id}}</p>
+      </div>
+    </div>
+    <div *ngIf="searchParams.search == 'repositories' || !searchParams.search">
+      <div class="repo container" *ngFor="let element of data">
+        <div class='row'>
+          <div class='col-sm-2'>
+          <img src='{{element.owner.avatar_url}}' alt='{{element.owner.login}}'>
+          </div>
+          <div class='col-sm-4'>
+          <div class='repository'><a href={{element.html_url}}>{{element.name}}</a></div>
+          <div class='owner'><a href='{{element.owner.html_url}}'>{{element.owner.login}}</a></div>
+            <div class='tag' *ngIf="element.langage">{{element.language}}</div>
+          </div>
+          <div class='col-sm-6 description'><b>Description:</b>
+            <p>{{element.description}}</p></div>
+        </div>
+      </div>
+    </div>
+    </div>

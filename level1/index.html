@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='github.js'></script>
+</head>
+<body onload="main()">
+    <button class="help">?</button>
+    <span class="tooltiptext"><p><b>USAGE:</b> write your query into the <b>searchbar</b></p>
+    <p>to use filters type in query <b>{filter Name}:{filter}</b></p>
+    <p><b>Available filters:</b></p>
+    <ul>
+        <li><b>user</b> - search by username </li>
+        <li><b>location</b> - search by location </li>
+        <li><b>language</b>- search by programming language</li>
+        <li><b>search</b> - <b>{users|repositories</b>(default)<b>}</b>- switches the searchmode</li>
+    <p>By clicking on a <b>filter tag</b>, you can <b>remove</b> the filter from the query</p>
+    </ul>
+    </span>
+    <div class="searchwrap">
+    <input id="query" class="searchbar" placeholder="type here">
+    
+        <ul id="tags" class="tags">
+          </ul>
+    <button id="submit" class="btn"><span>search</span></button>
+   </div>
+   <div class=pagination id="pagination"><button id="pset1"><<</button><button id="pdec"><</button><input id="page" type="number" min="0" disabled><button id="pinc">></button><button id="psetmax">>></button></div>
+   
+    <div id="result" class="row result"></div>
+   
+</body>
+</html>

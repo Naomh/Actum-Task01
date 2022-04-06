@@ -1,0 +1,24 @@
+/* You can add global styles to this file, and also import other style files */
+*{
+  margin: 0;
+}
+body{
+  background-color: #0f1114;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+input[type=number] {
+-moz-appearance: textfield;
+}
+input{
+  outline: none;
+}
+a{
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}

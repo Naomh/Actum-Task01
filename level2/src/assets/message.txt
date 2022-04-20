@@ -1,0 +1,75 @@
+```###
+ # IPP project 2
+ # 
+ # author:	Kateřina Henclová
+ # xlogin:  xhencl02
+ #
+ #
+
+from sys import stdin, stderr
+import argparse
+import os
+import re
+import xml.etree.ElementTree as ET
+
+class Error_class():
+    def __init__(self):
+        pass
+    error_message = {
+        10: 'Chybějící parametr skriptu nebo použití zakázané kombinace parametrů',
+        11: 'Chyba při otevírání vstupních souborů (např. neexistence, nedostatečné oprávnění)',
+        12: 'Chyba při otevření výstupních souborů pro zápis (např. nedostatečné oprávnění, chyba při zápisu)',
+        99: 'interní chyba (např. chyba alokace paměti)',
+        31: 'Chybný XML formát ve vstupním souboru (soubor není tzv. dobře formátovaný)',
+        32: 'Neočekávaná struktura XML (např. element pro argument mimo element pro instrukci, instrukce s duplicitním pořadím nebo záporným pořadím)'
+    }
+    def exit_code(self, error_number):
+        print(self.error_message[error_number], file=stderr)
+        exit(error_number)
+
+def main():
+
+    err = Error_class()
+
+    #argparse
+    arg_parser = argparse.ArgumentParser()
+    arg_parser.add_argument("--source", dest='source_file', default=stdin, help="Vstupní soubor s XML reprezentací zdrojového kódu.")
+    arg_parser.add_argument("--input", dest='input_file', default=stdin, help="Soubor se vstupy pro samotnou interpretaci zdrojového kódu.")
+   # arg_parser.add_argument("--help", help="Prints this help")
+
+    args = arg_parser.parse_args()
+
+    source_file = args.source_file
+    input_file = args.input_file
+
+
+
+    if args.source_file == stdin and args.input_file == stdin:
+        stderr.write('Missing argument\n')
+        err.exit_code(10)
+
+
+
+
+
+    #xml load
+    tree = ET.parse(source_file)
+    root = tree.getroot()
+
+    print(root.tag)
+
+    #xml check
+    if root.tag != 'program':
+        err.exit_code(31)
+    for child in root:
+        if child.tag != 'instrukce':
+            err.exit_code(31)
+        ca = list(child.attrib.keys())
+        if not('order' in ca) or not ('opcode' in ca):
+            err.exit_code(31)
+        for sub_elem in child:
+            if not(re.match(r"arg[123]", sub_elem.tag)):
+                err.exit_code(31)
+
+
+main()```

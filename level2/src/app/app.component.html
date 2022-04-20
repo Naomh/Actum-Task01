@@ -24,14 +24,14 @@
    <img src="../assets/Eclipse-1s-200px.svg" height="200px" width="200px" *ngIf="loading">
   </div>
     <div *ngIf="data" id="result" class="row result">
-      <div class="row" *ngIf="searchParams.search =='users'">
+      <div class="row" *ngIf="searched =='users'">
         <div *ngFor="let element of data" class="card col-md-2" >
         <img src='{{element.avatar_url}}' alt='{{element.login}}'>
         <a href='{{element.html_url}}'><p>{{element.login}}</p></a>
         <p class='gitid'>${{element.id}}</p>
       </div>
     </div>
-    <div *ngIf="searchParams.search == 'repositories' || !searchParams.search">
+    <div *ngIf="searched == 'repositories' || !searched">
       <div class="repo container" *ngFor="let element of data">
         <div class='row'>
           <div class='col-sm-2'>

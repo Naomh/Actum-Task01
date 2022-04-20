@@ -10,6 +10,7 @@ import { GitapiService } from './services/gitapi.service';
 export class AppComponent {
   public loading = false;
   public data:any;
+  public searched:string = '';
   public title = 'level2';
   public ui = new UI();
   public searchParams:{'query': string, 'filters':Set<string>, 'search':string, 'page':number }=<any>{search:'repositories'};
@@ -33,6 +34,7 @@ export class AppComponent {
   }
   public search(){
   this.loading = true;
+  this.searched = this.searchParams.search;
   this.data=[];
   this.gitApi.search(this.searchParams).then((res:any) => {
   if(this.ui.getMaxPage() === 0){
@@ -53,7 +55,7 @@ export class UI{
   private autoFilter:any=[];
   private maxPage = 0;
   private queryRegexp = new RegExp("user:[a-zA-Z|0-9]+|location:[a-zA-Z|0-9]+|language:[a-zA-Z|0-9]+","gi");
-  private searchRegexp = new RegExp("search:(users|repositories)","i");
+  private searchRegexp = new RegExp("search:(users|repositories)","gi");
   private replaceRegexp = new RegExp(this.queryRegexp.source+'|'+this.searchRegexp.source,'gi');
   private lastWordRegexp = new RegExp('(\\S)+$', 'gm');
   private currentPage = 1;
@@ -75,7 +77,6 @@ export class UI{
     this.autoFilter = this.autoFilter.filter((filter:string) => {
       return filter.match(lastWord+'$');
     })
-    console.log(this.autoFilter);
   }
   public autocomplete(input:HTMLInputElement){
     if(this.autoFilter.length>1){
@@ -117,12 +118,10 @@ export class UI{
   }
 
     autoFilters = autoFilters.filter(filter => {
-      console.log(filter);
       return filter.match(lastWord);
     });
     if(autoFilters.length>0){
     this.autoFilter = autoFilters;
-    console.log(this.autoFilter);
      input.value = input.value.replace(this.lastWordRegexp,this.autoFilter[0]);
     }
 
@@ -171,15 +170,15 @@ export class UI{
 
  public getInput(input:HTMLInputElement){
   const userInput: string = input.value;
-  let search: any = userInput.match(this.searchRegexp);
-  if(search){
-    this.searchtype = <'users'|'repositories'>Array.from(search)[1];
+  let search: any = Array.from(userInput.matchAll(this.searchRegexp));
+  if(search.length > 0){
+    this.searchtype = <'users'|'repositories'>(search.pop()).pop();
   }
   const matchces: IterableIterator<RegExpMatchArray> = userInput.matchAll(this.queryRegexp);
   for (let match of matchces){
     this.filters.add(match[0].toLowerCase());
   }
 const query = input.value = input.value.replace(this.replaceRegexp,'').trimStart();
-return {'query': query, 'filters':this.filters, 'search':this.searchtype, 'page':this.currentPage }
+return {'query': query.trim(), 'filters':this.filters, 'search':this.searchtype, 'page':this.currentPage }
 }
 }
